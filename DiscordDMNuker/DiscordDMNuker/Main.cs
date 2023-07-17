@@ -318,7 +318,7 @@ namespace DiscordDMNuker
                                 {
                                     foreach (var Attachment in message.Attachments)
                                     {
-                                        if (Attachment.FileName.Contains(".mp4") || Attachment.FileName.Contains(".jpg") || Attachment.FileName.Contains(".png") || Attachment.FileName.Contains(".webm") || Attachment.FileName.Contains(".png") || Attachment.FileName.Contains(".gif"))
+                                        if (allowedExtensions.Any(ext => Attachment.FileName.Contains(ext)))
                                         {
                                             var httpClient = new HttpClient();
                                             var fileName = RandomString(4) + Attachment.FileName;
