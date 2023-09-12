@@ -14,7 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Anarchy">
-      <HintPath>..\..\..\Anarchy\.bin\Anarchy\Debug\net6.0\Anarchy.dll</HintPath>
+      <HintPath>..\..\..\Anarchy\.bin\Anarchy\Release\net6.0\Anarchy.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

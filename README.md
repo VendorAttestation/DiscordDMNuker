@@ -40,5 +40,8 @@ DiscordDMNuker is powered by Anarchy This means for some reason if that gets pat
 - Audit log dumper [❌]
 
 # Credits
-- [https://github.com/not-ilinked/Anarchy](https://github.com/not-ilinked/Anarchy) (Anarchy Libary) (Master Branch Used)
 - https://github.com/TheVisual (Program)
+- https://github.com/not-ilinked (Anarchy Libary)
+
+# Dependencies
+- [https://github.com/TheVisual/Anarchy) (Master Branch Used)

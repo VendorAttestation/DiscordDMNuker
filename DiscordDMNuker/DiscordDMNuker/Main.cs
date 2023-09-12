@@ -3,7 +3,6 @@ using DiscordDMNuker.Extensions;
 using System;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -52,6 +51,29 @@ namespace DiscordDMNuker
         {
             return Regex.Replace(str, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
         }
+        private async Task DownloadAndSaveAsync(string url, string currentPath, string fileName)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                HttpResponseMessage response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string fullPath = Path.Combine(currentPath, "SavedMedia", fileName);
+                    using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        await response.Content.CopyToAsync(fileStream);
+                    }
+
+                    Logs.SafeAddItem($"Saved Image/Video: {fileName}");
+                }
+                else
+                {
+                    // Handle the error appropriately, e.g.:
+                    Logs.SafeAddItem($"Failed to download Image/Video: {fileName}. Status code: {response.StatusCode}");
+                }
+            }
+        }
 
         private async void Start(string Token, ulong MainId, bool savepicsnvids, bool savemessages, bool delete, bool IsGroupChat, bool Edit, string MessageContent, bool IsChannel, ulong ChannelId)
         {
@@ -69,7 +91,7 @@ namespace DiscordDMNuker
                         Logs.SafeAddItem($"Created DMs With: {user.Username}");
                         var messages = await client.GetChannelMessagesAsync(channel.Id);
                         Status.SafeChangeText("In Progress....");
-                        string convoPath = $"SavedConvos/{RemoveSpecialCharacters(user.Username)}{random.Next(1, 999_999_999)}.txt";
+                        string convoPath = $"SavedConvos/{RemoveSpecialCharacters(user.Username)}{random.Next(1, 999999999)}.txt";
 
                         foreach (DiscordMessage message in messages)
                         {
@@ -92,23 +114,7 @@ namespace DiscordDMNuker
                                         {
                                             using var httpClient = new HttpClient();
                                             var fileName = $"{RandomString(4)}{Attachment.FileName}";
-                                            await httpClient.GetAsync(Attachment.Url)
-                                                .ContinueWith(responseTask =>
-                                                {
-                                                    HttpResponseMessage response = responseTask.Result;
-                                                    response.EnsureSuccessStatusCode();
-                                                    using (var fileStream = File.Create(Path.Combine(currentPath, "SavedMedia", fileName)))
-                                                    {
-                                                        response.Content.CopyToAsync(fileStream).ContinueWith(copyTask =>
-                                                        {
-                                                            fileStream.Close();
-                                                            if (copyTask.IsCompleted)
-                                                            {
-                                                                Logs.SafeAddItem($"Saved Image/Video: {fileName}");
-                                                            }
-                                                        });
-                                                    }
-                                                });
+                                            await DownloadAndSaveAsync(Attachment.Url, currentPath, fileName);
                                         }
                                     }
                                 }
