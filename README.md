@@ -44,4 +44,4 @@ DiscordDMNuker is powered by Anarchy This means for some reason if that gets pat
 - https://github.com/not-ilinked (Anarchy Libary)
 
 # Dependencies
-- [https://github.com/TheVisual/Anarchy) (Master Branch Used)
+- https://github.com/TheVisual/Anarchy (Master Branch Used)
