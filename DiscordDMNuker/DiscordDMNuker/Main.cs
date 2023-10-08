@@ -22,12 +22,10 @@ namespace DiscordDMNuker
             ".mp3", ".wav", ".ogg", ".flac", ".m4a", // Audio
             ".txt", ".json", // Text
         };
-
         public Main()
         {
             InitializeComponent();
         }
-
         private void Main_Load(object sender, EventArgs e)
         {
             if (!Directory.Exists(Path.Combine(currentPath, "SavedMedia")))
@@ -46,7 +44,6 @@ namespace DiscordDMNuker
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
-
         public static string RemoveSpecialCharacters(string str)
         {
             return Regex.Replace(str, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
@@ -74,7 +71,6 @@ namespace DiscordDMNuker
                 }
             }
         }
-
         private async void Start(string Token, ulong MainId, bool savepicsnvids, bool savemessages, bool delete, bool IsGroupChat, bool Edit, string MessageContent, bool IsChannel, ulong ChannelId)
         {
             await Task.Run(async () =>
@@ -161,6 +157,42 @@ namespace DiscordDMNuker
                                         writer.WriteLine($"{message.Author.User.Username} || {message.Content}");
                                     }
                                 }
+
+                                if (savepicsnvids)
+                                {
+                                    if (message.Attachments != null)
+                                    {
+                                        foreach (var Attachment in message.Attachments)
+                                        {
+                                            if (allowedExtensions.Any(ext => Attachment.FileName.Contains(ext)))
+                                            {
+                                                using var httpClient = new HttpClient();
+                                                var fileName = $"{RandomString(4)}{Attachment.FileName}";
+                                                await DownloadAndSaveAsync(Attachment.Url, currentPath, fileName);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (delete || Edit)
+                                {
+                                    if (message.Author.User.Id == client.User.Id && message.Type != MessageType.GuildMemberJoin && message.Type != MessageType.ChannelPinnedMessage && message.Type != MessageType.GuildBoostedTier1 && message.Type != MessageType.GuildBoostedTier2 && message.Type != MessageType.GuildBoostedTier3 && message.Type != MessageType.GuildMemberJoin && message.Type != MessageType.GuildBoosted && message.Type != MessageType.ThreadCreated && message.Type != MessageType.ThreadStarterMessage && message.Type != MessageType.RecipientAdd && message.Type != MessageType.RecipientRemove && message.Type != MessageType.Call)
+                                    {
+                                        if (delete)
+                                        {
+                                            await message.DeleteAsync();
+                                            Logs.SafeAddItem($"Deleted Message: {message.Content}");
+                                            await Task.Delay(new Random().Next(2200, 2500));
+                                        }
+
+                                        if (Edit)
+                                        {
+                                            await message.EditAsync(new MessageEditProperties { Content = MessageContent });
+                                            Logs.SafeAddItem($"Edited Message: {message.Content}");
+                                            await Task.Delay(new Random().Next(2200, 2500));
+                                        }
+                                    }
+                                }
                             }
                         }
                         Status.SafeChangeText("Completed");
@@ -181,6 +213,42 @@ namespace DiscordDMNuker
                                     writer.WriteLine($"{message.Author.User.Username} || {message.Content}");
                                 }
                             }
+
+                            if (savepicsnvids)
+                            {
+                                if (message.Attachments != null)
+                                {
+                                    foreach (var Attachment in message.Attachments)
+                                    {
+                                        if (allowedExtensions.Any(ext => Attachment.FileName.Contains(ext)))
+                                        {
+                                            using var httpClient = new HttpClient();
+                                            var fileName = $"{RandomString(4)}{Attachment.FileName}";
+                                            await DownloadAndSaveAsync(Attachment.Url, currentPath, fileName);
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (delete || Edit)
+                            {
+                                if (message.Author.User.Id == client.User.Id && message.Type != MessageType.GuildMemberJoin && message.Type != MessageType.ChannelPinnedMessage && message.Type != MessageType.GuildBoostedTier1 && message.Type != MessageType.GuildBoostedTier2 && message.Type != MessageType.GuildBoostedTier3 && message.Type != MessageType.GuildMemberJoin && message.Type != MessageType.GuildBoosted && message.Type != MessageType.ThreadCreated && message.Type != MessageType.ThreadStarterMessage && message.Type != MessageType.RecipientAdd && message.Type != MessageType.RecipientRemove && message.Type != MessageType.Call)
+                                {
+                                    if (delete)
+                                    {
+                                        await message.DeleteAsync();
+                                        Logs.SafeAddItem($"Deleted Message: {message.Content}");
+                                        await Task.Delay(new Random().Next(2200, 2500));
+                                    }
+
+                                    if (Edit)
+                                    {
+                                        await message.EditAsync(new MessageEditProperties { Content = MessageContent });
+                                        Logs.SafeAddItem($"Edited Message: {message.Content}");
+                                        await Task.Delay(new Random().Next(2200, 2500));
+                                    }
+                                }
+                            }
                         }
                         Status.SafeChangeText("Completed");
                     }
@@ -192,7 +260,6 @@ namespace DiscordDMNuker
                 catch { }
             });
         }
-
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             using (FormStart FormStart = new FormStart())
