@@ -24,6 +24,7 @@ DiscordDMNuker is powered by Anarchy This means for some reason if that gets pat
 - Mac Support
 - Windows Support
 - NET 6
+- Simple Anti-Bot (Realistic)Delays
 
 # Development roadmap [❌] = In progress [✔️] = Done
 - UI [✔️]
