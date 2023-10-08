@@ -40,6 +40,11 @@ DiscordDMNuker is powered by Anarchy This means for some reason if that gets pat
 - Channel Message Deleter In guilds [✔️]
 - Audit log dumper [❌]
 
+# Emoji Meanings
+- ✔️ (Completed)
+- ❌ (Not Completed)
+- ⚠️ (Not fully but still works may break anytime)
+
 # Credits
 - https://github.com/TheVisual (Program)
 - https://github.com/not-ilinked (Anarchy Libary)
