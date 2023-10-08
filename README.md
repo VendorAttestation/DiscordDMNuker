@@ -32,7 +32,7 @@ DiscordDMNuker is powered by Anarchy This means for some reason if that gets pat
 - Token Support  [✔️]
 - Token Session Saving when reopening application. [✔️]
 - Async [✔️]
-- Latest Discord API [✔️]
+- Latest Discord API [⚠️]
 - Save Images / Videos [✔️]
 - Save Logs Of messages [✔️]
 - Message Editor Support [✔️]
