@@ -26,7 +26,7 @@ DiscordDMNuker is powered by Anarchy This means for some reason if that gets pat
 - NET 6
 - Simple Anti-Bot (Realistic)Delays
 
-# Development roadmap [❌] = In progress [✔️] = Done
+# Development roadmap [❌] = In progress [✔️] = Done [⚠️] = No Longer Maintained (Working but may break anytime)
 - UI [✔️]
 - Extended Logging [✔️]
 - Token Support  [✔️]
@@ -39,11 +39,6 @@ DiscordDMNuker is powered by Anarchy This means for some reason if that gets pat
 - Group Chat Support [✔️]
 - Channel Message Deleter In guilds [✔️]
 - Audit log dumper [❌]
-
-# Emoji Meanings
-- ✔️ (Completed)
-- ❌ (Not Completed)
-- ⚠️ (Not fully but still works may break anytime)
 
 # Credits
 - https://github.com/TheVisual (Program)
