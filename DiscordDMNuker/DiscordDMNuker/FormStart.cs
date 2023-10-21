@@ -16,6 +16,7 @@ namespace DiscordDMNuker
         public bool Edit;
         public bool IsGroupChat;
         public bool IsChannel;
+        public string Proxy;
         public FormStart()
         {
             InitializeComponent();
@@ -40,6 +41,7 @@ namespace DiscordDMNuker
             IsChannel = checkBox6.Checked;
             Properties.Settings.Default.Token = textBox2.Text;
             Properties.Settings.Default.Save();
+            Proxy = textBox5.Text.Trim();
             if (IsChannel)
             {
                 ChannelId = Convert.ToUInt64(textBox4.Text.Trim());
@@ -50,15 +52,7 @@ namespace DiscordDMNuker
 
         private void FormStart_Load(object sender, EventArgs e)
         {
-            try
-            {
-                textBox2.Text = Properties.Settings.Default.Token;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                MessageBox.Show("Failed to get token automatically are you using canary? If not please get your token manually if so report this bug in issues on github");
-            }
+            textBox2.Text = Properties.Settings.Default.Token;
         }
     }
 }

@@ -3,6 +3,7 @@ using DiscordDMNuker.Extensions;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -38,6 +39,18 @@ namespace DiscordDMNuker
                 Directory.CreateDirectory(Path.Combine(currentPath, "SavedConvos"));
             }
         }
+        private static WebProxy CreateProxyWithCredentials(string[] proxyComponents)
+        {
+            string host = proxyComponents[0];
+            int port = int.Parse(proxyComponents[1]);
+            string username = proxyComponents[2];
+            string password = proxyComponents[3];
+
+            ICredentials credentials = new NetworkCredential(username, password);
+            var proxyUri = new Uri($"http://{host}:{port}");
+
+            return new WebProxy(proxyUri, false, null, credentials);
+        }
         public static string RandomString(int length)
         {
             const string chars = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -71,14 +84,41 @@ namespace DiscordDMNuker
                 }
             }
         }
-        private async void Start(string Token, ulong MainId, bool savepicsnvids, bool savemessages, bool delete, bool IsGroupChat, bool Edit, string MessageContent, bool IsChannel, ulong ChannelId)
+        private async void Start(string Token, ulong MainId, bool savepicsnvids, bool savemessages, bool delete, bool IsGroupChat, bool Edit, string MessageContent, bool IsChannel, ulong ChannelId, string proxy)
         {
             await Task.Run(async () =>
             {
                 try
                 {
                     Status.SafeChangeText("Starting");
-                    DiscordClient client = new DiscordClient(Token);
+                    DiscordClient client;
+                    if (!string.IsNullOrEmpty(proxy))
+                    {
+                        string[] proxyComponents = proxy.Split(':');
+
+                        WebProxy webProxy;
+
+                        switch (proxyComponents.Length)
+                        {
+                            case 2:
+                                string host = proxyComponents[0];
+                                int port = int.Parse(proxyComponents[1]);
+
+                                webProxy = new WebProxy(host, port);
+                                break;
+                            case 4:
+                                webProxy = CreateProxyWithCredentials(proxyComponents);
+                                break;
+                            default:
+                                throw new ArgumentException("Invalid proxy format.");
+                        }
+                        client = new DiscordClient(Token, new ApiConfig { Proxy = webProxy });
+                    }
+                    else
+                    {
+                        client = new DiscordClient(Token);
+                    }
+
                     Logs.SafeAddItem($"Logged In To: {client.User.Username}");
                     if (!IsGroupChat && !IsChannel)
                     {
@@ -270,7 +310,7 @@ namespace DiscordDMNuker
                     Status = toolStripStatusLabel1;
                     Logs = listBox1;
 
-                    Start(FormStart.Token, FormStart.MainId, FormStart.SavePicsNVids, FormStart.SaveMessages, FormStart.Delete, FormStart.IsGroupChat, FormStart.Edit, FormStart.Message, FormStart.IsChannel, FormStart.ChannelId);
+                    Start(FormStart.Token, FormStart.MainId, FormStart.SavePicsNVids, FormStart.SaveMessages, FormStart.Delete, FormStart.IsGroupChat, FormStart.Edit, FormStart.Message, FormStart.IsChannel, FormStart.ChannelId, FormStart.Proxy);
                 }
             }
         }
